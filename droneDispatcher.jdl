@@ -2,7 +2,7 @@ application {
   config {
     baseName droneDispatcher
     applicationType microservice
-    packageName com.musala.droneDispatcher
+    packageName com.musala.dronedispatcher
     serviceDiscoveryType no
     databaseType sql
     devDatabaseType h2Disk
