@@ -1,0 +1,47 @@
+{
+  "name": "Medication",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique", "pattern"],
+      "fieldValidateRulesPattern": "([A-Z]?|_).([A-Z,\\-,_])+"
+    },
+    {
+      "fieldName": "weight",
+      "fieldType": "Float",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "code",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "pattern"],
+      "fieldValidateRulesPattern": "([A-Z,0-9,\\-,_])+"
+    },
+    {
+      "fieldName": "image",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "droneToMedications",
+      "otherEntityRelationshipName": "medication",
+      "relationshipName": "droneToMedications",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20220819022731",
+  "entityTableName": "medication",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": ["droneDispatcher"]
+}
