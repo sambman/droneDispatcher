@@ -1,5 +1,6 @@
 package com.musala.dronedispatcher.web.rest;
 
+import com.musala.dronedispatcher.domain.enumeration.StateType;
 import com.musala.dronedispatcher.service.DroneService;
 import com.musala.dronedispatcher.web.rest.errors.BadRequestAlertException;
 import com.musala.dronedispatcher.service.dto.DroneDTO;
@@ -46,7 +47,7 @@ public class DroneResource {
     }
 
     /**
-     * {@code POST  /drones} : Create a new drone.
+     * {@code POST  /drones} : Create a new drone: drone registration.
      *
      * @param droneDTO the droneDTO to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new droneDTO, or with status {@code 400 (Bad Request)} if the drone has already an ID.
@@ -58,6 +59,10 @@ public class DroneResource {
         if (droneDTO.getId() != null) {
             throw new BadRequestAlertException("A new drone cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        if (droneService.findAllWithoutPagination().size() == 10) {
+            throw new BadRequestAlertException("Cannot register more than 10 drones", ENTITY_NAME, "nb10Drones");
+        }
+        droneDTO.setState(StateType.IDLE); // new drone is on IDLE state
         DroneDTO result = droneService.save(droneDTO);
         return ResponseEntity.created(new URI("/api/drones/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
