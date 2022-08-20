@@ -82,4 +82,9 @@ public class DroneServiceImpl implements DroneService {
         log.debug("Request to delete Drone : {}", id);
         droneRepository.deleteById(id);
     }
+
+    @Override
+    public List<DroneDTO> findAllWithoutPagination() {
+        return droneMapper.toDto(droneRepository.findAll());
+    }
 }

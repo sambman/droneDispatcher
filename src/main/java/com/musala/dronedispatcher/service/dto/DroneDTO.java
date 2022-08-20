@@ -27,7 +27,6 @@ public class DroneDTO implements Serializable {
     @DecimalMax(value = "100")
     private Float batteryCapacity;
 
-    @NotNull
     private StateType state;
 
     

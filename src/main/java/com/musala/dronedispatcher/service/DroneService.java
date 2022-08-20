@@ -50,4 +50,11 @@ public interface DroneService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    /**
+     * Get all the DroneDTO without pagination.
+     *
+     * @return the {@link List} of entities.
+     */
+    List<DroneDTO> findAllWithoutPagination();
 }
