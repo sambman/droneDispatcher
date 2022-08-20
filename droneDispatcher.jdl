@@ -1,0 +1,75 @@
+application {
+  config {
+    baseName droneDispatcher
+    applicationType microservice
+    packageName com.musala.dronedispatcher
+    serviceDiscoveryType no
+    databaseType sql
+    devDatabaseType h2Disk
+    prodDatabaseType mysql
+    cacheProvider no
+    buildTool maven
+    skipUserManagement true
+    serverPort 8080
+    authenticationType jwt
+  }
+  entities *
+  service * with serviceImpl
+  dto * with mapstruct
+  paginate * with pagination
+}
+
+entity Drone {
+	serialNumber String required unique maxlength(100)
+    model ModelType required
+    weightLimit Float min(0) max(500)
+    batteryCapacity Float min(0) max(100)
+    state StateType required
+}
+
+entity Medication {
+	name String required unique pattern(/([A-Z]?|_).([A-Z,\-,_])+/)
+    weight Float required
+    code String required pattern(/([A-Z,0-9,\-,_])+/)
+    image ImageBlob
+}
+
+entity DroneToMedications
+
+enum ModelType {
+	LIGHTWEIGHT("Lightweight")
+    MIDDLEWEIGHT("Middleweight")
+    CRUISEWEIGHT("Cruiserweight")
+    HEAVYWEIGHT("Heavyweight")
+}
+
+enum StateType {
+	IDLE
+    LOADING
+    LOADED
+    DELIVERING
+    DELIVERED
+    RETURNING
+}
+
+/**
+ * One to one relationship.
+ */
+relationship OneToOne {
+    DroneToMedications{drone required} to Drone{droneToMedications}
+}
+
+/**
+ * Many to one relationship.
+ */
+relationship ManyToOne {
+    Medication{droneToMedications} to DroneToMedications
+}
+
+/**
+ * One to many relationship.
+ */
+relationship OneToMany {
+    DroneToMedications to Medication{droneToMedications}
+}
+

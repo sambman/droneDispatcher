@@ -1,0 +1,35 @@
+{
+  "name": "DroneToMedications",
+  "fields": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "drone",
+      "otherEntityRelationshipName": "droneToMedications",
+      "relationshipValidateRules": "required",
+      "relationshipName": "drone",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipName": "medication",
+      "otherEntityName": "medication",
+      "relationshipType": "one-to-many",
+      "otherEntityRelationshipName": "droneToMedications"
+    }
+  ],
+  "changelogDate": "20220819022831",
+  "entityTableName": "drone_to_medications",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "droneDispatcher",
+  "applications": ["droneDispatcher"],
+  "searchEngine": false,
+  "databaseType": "sql",
+  "microserviceName": "droneDispatcher"
+}
