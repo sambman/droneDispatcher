@@ -10,6 +10,12 @@
       "relationshipName": "drone",
       "otherEntityField": "id",
       "ownerSide": true
+    },
+    {
+      "relationshipName": "medication",
+      "otherEntityName": "medication",
+      "relationshipType": "one-to-many",
+      "otherEntityRelationshipName": "droneToMedications"
     }
   ],
   "changelogDate": "20220819022831",
@@ -21,6 +27,9 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": ["droneDispatcher"]
+  "clientRootFolder": "droneDispatcher",
+  "applications": ["droneDispatcher"],
+  "searchEngine": false,
+  "databaseType": "sql",
+  "microserviceName": "droneDispatcher"
 }

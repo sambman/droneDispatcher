@@ -16,6 +16,8 @@ public interface DroneToMedicationsMapper extends EntityMapper<DroneToMedication
     DroneToMedicationsDTO toDto(DroneToMedications droneToMedications);
 
     @Mapping(source = "droneId", target = "drone")
+    @Mapping(target = "medications", ignore = true)
+    @Mapping(target = "removeMedication", ignore = true)
     DroneToMedications toEntity(DroneToMedicationsDTO droneToMedicationsDTO);
 
     default DroneToMedications fromId(Long id) {

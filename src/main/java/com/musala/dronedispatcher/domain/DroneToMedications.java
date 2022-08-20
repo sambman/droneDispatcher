@@ -5,6 +5,8 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A DroneToMedications.
@@ -23,6 +25,9 @@ public class DroneToMedications implements Serializable {
     @NotNull
     @JoinColumn(unique = true)
     private Drone drone;
+
+    @OneToMany(mappedBy = "droneToMedications")
+    private Set<Medication> medications = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -44,6 +49,31 @@ public class DroneToMedications implements Serializable {
 
     public void setDrone(Drone drone) {
         this.drone = drone;
+    }
+
+    public Set<Medication> getMedications() {
+        return medications;
+    }
+
+    public DroneToMedications medications(Set<Medication> medications) {
+        this.medications = medications;
+        return this;
+    }
+
+    public DroneToMedications addMedication(Medication medication) {
+        this.medications.add(medication);
+        medication.setDroneToMedications(this);
+        return this;
+    }
+
+    public DroneToMedications removeMedication(Medication medication) {
+        this.medications.remove(medication);
+        medication.setDroneToMedications(null);
+        return this;
+    }
+
+    public void setMedications(Set<Medication> medications) {
+        this.medications = medications;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
