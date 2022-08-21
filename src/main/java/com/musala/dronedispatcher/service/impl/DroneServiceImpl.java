@@ -2,6 +2,7 @@ package com.musala.dronedispatcher.service.impl;
 
 import com.musala.dronedispatcher.service.DroneService;
 import com.musala.dronedispatcher.domain.Drone;
+import com.musala.dronedispatcher.domain.enumeration.StateType;
 import com.musala.dronedispatcher.repository.DroneRepository;
 import com.musala.dronedispatcher.service.dto.DroneDTO;
 import com.musala.dronedispatcher.service.mapper.DroneMapper;
@@ -68,5 +69,10 @@ public class DroneServiceImpl implements DroneService {
     @Override
     public List<DroneDTO> findAllWithoutPagination() {
         return droneMapper.toDto(droneRepository.findAll());
+    }
+
+    @Override
+    public List<DroneDTO> getAllAvailableDrones() {
+        return droneMapper.toDto(droneRepository.findByState(StateType.IDLE));
     }
 }

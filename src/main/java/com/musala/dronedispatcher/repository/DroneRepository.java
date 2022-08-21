@@ -1,6 +1,7 @@
 package com.musala.dronedispatcher.repository;
 
 import com.musala.dronedispatcher.domain.Drone;
+import com.musala.dronedispatcher.domain.enumeration.StateType;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DroneRepository extends JpaRepository<Drone, Long> {
     List<Drone> findAll();
+
+    List<Drone> findByState(StateType stateType);
 }

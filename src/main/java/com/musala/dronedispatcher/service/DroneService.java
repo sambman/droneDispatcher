@@ -51,4 +51,6 @@ public interface DroneService {
      * @return the {@link List} of entities.
      */
     List<DroneDTO> findAllWithoutPagination();
+
+    List<DroneDTO> getAllAvailableDrones();
 }

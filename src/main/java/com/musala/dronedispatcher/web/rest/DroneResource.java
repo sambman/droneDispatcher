@@ -129,4 +129,16 @@ public class DroneResource {
         droneService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
+
+    /**
+     * {@code GET  /drones/available} : get available drones.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of available drones in body.
+     */
+    @GetMapping("/drones/available")
+    public ResponseEntity<List<DroneDTO>> getAvailableDrones() {
+        log.debug("REST request to get a page of Drones");
+        List<DroneDTO> drones = droneService.getAllAvailableDrones();
+        return ResponseEntity.ok().body(drones);
+    }
 }
