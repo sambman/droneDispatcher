@@ -1,10 +1,12 @@
 package com.musala.dronedispatcher.service;
 
 import com.musala.dronedispatcher.service.dto.DroneToMedicationsDTO;
+import com.musala.dronedispatcher.service.dto.MedicationDTO;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -43,4 +45,12 @@ public interface DroneToMedicationsService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    /**
+     * Get all the medication(s) loaded on the given drone.
+     *
+     * @param droneId the drone ID.
+     * @return the list of medication(s).
+     */
+    List<MedicationDTO> getLoadedMedications(Long droneId);
 }

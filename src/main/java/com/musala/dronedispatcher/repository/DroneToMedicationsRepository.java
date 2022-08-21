@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface DroneToMedicationsRepository extends JpaRepository<DroneToMedications, Long> {
+    DroneToMedications findLastByDroneId(Long droneId);
 }

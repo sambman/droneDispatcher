@@ -176,4 +176,17 @@ public class DroneToMedicationsResource {
         droneToMedicationsService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
+
+    /**
+     * {@code GET  /drone-to-medications/:droneId/medications} : get all the droneToMedications.
+     *
+     * @param droneId the drone ID.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Medications in body.
+     */
+    @GetMapping("/drone-to-medications/{droneId}/medications")
+    public ResponseEntity<List<MedicationDTO>> getLoadedMedications(@PathVariable Long droneId) {
+        log.debug("REST request to get loaded medications on drone with ID: {}", droneId);
+        List<MedicationDTO> medications = droneToMedicationsService.getLoadedMedications(droneId);
+        return ResponseEntity.ok().body(medications);
+    }
 }
