@@ -81,11 +81,20 @@ public class DroneToMedicationsResource {
             throw new BadRequestAlertException("Cannot load drone with less battery precentage: " + droneDTO.getBatteryCapacity(), ENTITY_NAME, "lessbatterycapacity");
         }
 
-        // Check if medications total weight is not greater that drone's max capacity
         if (droneToMedicationsDTO.getMedications() == null || droneToMedicationsDTO.getMedications().size() == 0) {
             throw new BadRequestAlertException("Cannot load drone with no medication(s).", ENTITY_NAME, "nomedications");
         }
         // Chech if any medication is on system and no already loaded
+        for (MedicationDTO medicationDTO : droneToMedicationsDTO.getMedications()) {
+            Optional<MedicationDTO> optionalMedication = medicationService.findOne(medicationDTO.getId());
+            if (!optionalMedication.isPresent()) {
+                throw new BadRequestAlertException("Cannot find medication in system: " + medicationDTO, ENTITY_NAME, "nomedicationinsystem");
+            }
+            if (optionalMedication.get().getDroneToMedicationsId() != null) {
+                throw new BadRequestAlertException("Cannot load an already delivered medication: " + medicationDTO, ENTITY_NAME, "alreadydeliveredmedication");
+            }
+        }
+        // Check if medications total weight is not greater that drone's max capacity
         Float totalWeight = droneToMedicationsDTO.getMedications()
             .stream().map(medication -> medication.getWeight())
             .reduce(0F, (subTotal, element) -> subTotal + element);
