@@ -50,11 +50,15 @@ public class DroneToMedicationsServiceImpl implements DroneToMedicationsService 
     }
 
 
+    public Page<DroneToMedicationsDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return droneToMedicationsRepository.findAllWithEagerRelationships(pageable).map(droneToMedicationsMapper::toDto);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public Optional<DroneToMedicationsDTO> findOne(Long id) {
         log.debug("Request to get DroneToMedications : {}", id);
-        return droneToMedicationsRepository.findById(id)
+        return droneToMedicationsRepository.findOneWithEagerRelationships(id)
             .map(droneToMedicationsMapper::toDto);
     }
 

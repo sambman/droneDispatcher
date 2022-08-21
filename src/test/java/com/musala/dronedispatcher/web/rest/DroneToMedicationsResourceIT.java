@@ -2,7 +2,6 @@ package com.musala.dronedispatcher.web.rest;
 
 import com.musala.dronedispatcher.DroneDispatcherApp;
 import com.musala.dronedispatcher.domain.DroneToMedications;
-import com.musala.dronedispatcher.domain.Drone;
 import com.musala.dronedispatcher.repository.DroneToMedicationsRepository;
 import com.musala.dronedispatcher.service.DroneToMedicationsService;
 import com.musala.dronedispatcher.service.dto.DroneToMedicationsDTO;
@@ -10,18 +9,25 @@ import com.musala.dronedispatcher.service.mapper.DroneToMedicationsMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -29,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Integration tests for the {@link DroneToMedicationsResource} REST controller.
  */
 @SpringBootTest(classes = DroneDispatcherApp.class)
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 public class DroneToMedicationsResourceIT {
@@ -36,8 +43,14 @@ public class DroneToMedicationsResourceIT {
     @Autowired
     private DroneToMedicationsRepository droneToMedicationsRepository;
 
+    @Mock
+    private DroneToMedicationsRepository droneToMedicationsRepositoryMock;
+
     @Autowired
     private DroneToMedicationsMapper droneToMedicationsMapper;
+
+    @Mock
+    private DroneToMedicationsService droneToMedicationsServiceMock;
 
     @Autowired
     private DroneToMedicationsService droneToMedicationsService;
@@ -58,16 +71,6 @@ public class DroneToMedicationsResourceIT {
      */
     public static DroneToMedications createEntity(EntityManager em) {
         DroneToMedications droneToMedications = new DroneToMedications();
-        // Add required entity
-        Drone drone;
-        if (TestUtil.findAll(em, Drone.class).isEmpty()) {
-            drone = DroneResourceIT.createEntity(em);
-            em.persist(drone);
-            em.flush();
-        } else {
-            drone = TestUtil.findAll(em, Drone.class).get(0);
-        }
-        droneToMedications.setDrone(drone);
         return droneToMedications;
     }
     /**
@@ -78,16 +81,6 @@ public class DroneToMedicationsResourceIT {
      */
     public static DroneToMedications createUpdatedEntity(EntityManager em) {
         DroneToMedications droneToMedications = new DroneToMedications();
-        // Add required entity
-        Drone drone;
-        if (TestUtil.findAll(em, Drone.class).isEmpty()) {
-            drone = DroneResourceIT.createUpdatedEntity(em);
-            em.persist(drone);
-            em.flush();
-        } else {
-            drone = TestUtil.findAll(em, Drone.class).get(0);
-        }
-        droneToMedications.setDrone(drone);
         return droneToMedications;
     }
 
@@ -147,6 +140,26 @@ public class DroneToMedicationsResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(droneToMedications.getId().intValue())));
     }
     
+    @SuppressWarnings({"unchecked"})
+    public void getAllDroneToMedicationsWithEagerRelationshipsIsEnabled() throws Exception {
+        when(droneToMedicationsServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restDroneToMedicationsMockMvc.perform(get("/api/drone-to-medications?eagerload=true"))
+            .andExpect(status().isOk());
+
+        verify(droneToMedicationsServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public void getAllDroneToMedicationsWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(droneToMedicationsServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restDroneToMedicationsMockMvc.perform(get("/api/drone-to-medications?eagerload=true"))
+            .andExpect(status().isOk());
+
+        verify(droneToMedicationsServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
     @Test
     @Transactional
     public void getDroneToMedications() throws Exception {

@@ -6,6 +6,8 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.musala.dronedispatcher.domain.enumeration.ModelType;
 
@@ -49,9 +51,9 @@ public class Drone implements Serializable {
     @Column(name = "state", nullable = false)
     private StateType state;
 
-    @OneToOne(mappedBy = "drone")
+    @ManyToMany(mappedBy = "drones")
     @JsonIgnore
-    private DroneToMedications droneToMedications;
+    private Set<DroneToMedications> droneToMedications = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -127,16 +129,28 @@ public class Drone implements Serializable {
         this.state = state;
     }
 
-    public DroneToMedications getDroneToMedications() {
+    public Set<DroneToMedications> getDroneToMedications() {
         return droneToMedications;
     }
 
-    public Drone droneToMedications(DroneToMedications droneToMedications) {
+    public Drone droneToMedications(Set<DroneToMedications> droneToMedications) {
         this.droneToMedications = droneToMedications;
         return this;
     }
 
-    public void setDroneToMedications(DroneToMedications droneToMedications) {
+    public Drone addDroneToMedications(DroneToMedications droneToMedications) {
+        this.droneToMedications.add(droneToMedications);
+        droneToMedications.getDrones().add(this);
+        return this;
+    }
+
+    public Drone removeDroneToMedications(DroneToMedications droneToMedications) {
+        this.droneToMedications.remove(droneToMedications);
+        droneToMedications.getDrones().remove(this);
+        return this;
+    }
+
+    public void setDroneToMedications(Set<DroneToMedications> droneToMedications) {
         this.droneToMedications = droneToMedications;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

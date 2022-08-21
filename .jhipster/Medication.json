@@ -42,6 +42,7 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": ["droneDispatcher"]
+  "clientRootFolder": "droneDispatcher",
+  "applications": ["droneDispatcher"],
+  "microserviceName": "droneDispatcher"
 }

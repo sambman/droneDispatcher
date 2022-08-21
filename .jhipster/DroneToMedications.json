@@ -3,19 +3,18 @@
   "fields": [],
   "relationships": [
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "one-to-many",
+      "otherEntityName": "medication",
+      "otherEntityRelationshipName": "droneToMedications",
+      "relationshipName": "medication"
+    },
+    {
+      "relationshipType": "many-to-many",
       "otherEntityName": "drone",
       "otherEntityRelationshipName": "droneToMedications",
-      "relationshipValidateRules": "required",
       "relationshipName": "drone",
       "otherEntityField": "id",
       "ownerSide": true
-    },
-    {
-      "relationshipName": "medication",
-      "otherEntityName": "medication",
-      "relationshipType": "one-to-many",
-      "otherEntityRelationshipName": "droneToMedications"
     }
   ],
   "changelogDate": "20220819022831",
