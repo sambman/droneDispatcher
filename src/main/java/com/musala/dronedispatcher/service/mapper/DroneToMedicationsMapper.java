@@ -12,12 +12,10 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {DroneMapper.class})
 public interface DroneToMedicationsMapper extends EntityMapper<DroneToMedicationsDTO, DroneToMedications> {
 
-    @Mapping(source = "drone.id", target = "droneId")
-    DroneToMedicationsDTO toDto(DroneToMedications droneToMedications);
 
-    @Mapping(source = "droneId", target = "drone")
     @Mapping(target = "medications", ignore = true)
     @Mapping(target = "removeMedication", ignore = true)
+    @Mapping(target = "removeDrone", ignore = true)
     DroneToMedications toEntity(DroneToMedicationsDTO droneToMedicationsDTO);
 
     default DroneToMedications fromId(Long id) {

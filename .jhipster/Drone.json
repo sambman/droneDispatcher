@@ -36,10 +36,11 @@
   ],
   "relationships": [
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-many",
       "otherEntityName": "droneToMedications",
       "otherEntityRelationshipName": "drone",
       "relationshipName": "droneToMedications",
+      "otherEntityField": "id",
       "ownerSide": false
     }
   ],
@@ -52,6 +53,7 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": ["droneDispatcher"]
+  "clientRootFolder": "droneDispatcher",
+  "applications": ["droneDispatcher"],
+  "microserviceName": "droneDispatcher"
 }

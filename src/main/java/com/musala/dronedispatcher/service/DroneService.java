@@ -28,12 +28,6 @@ public interface DroneService {
      * @return the list of entities.
      */
     Page<DroneDTO> findAll(Pageable pageable);
-    /**
-     * Get all the DroneDTO where DroneToMedications is {@code null}.
-     *
-     * @return the {@link List} of entities.
-     */
-    List<DroneDTO> findAllWhereDroneToMedicationsIsNull();
 
 
     /**

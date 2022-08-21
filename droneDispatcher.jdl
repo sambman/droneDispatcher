@@ -53,10 +53,10 @@ enum StateType {
 }
 
 /**
- * One to one relationship.
+ * Many to many relationship.
  */
-relationship OneToOne {
-    DroneToMedications{drone required} to Drone{droneToMedications}
+relationship ManyToMany {
+    DroneToMedications{drone} to Drone{droneToMedications}
 }
 
 /**

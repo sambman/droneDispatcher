@@ -2,7 +2,6 @@ package com.musala.dronedispatcher.domain;
 
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -21,13 +20,14 @@ public class DroneToMedications implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(optional = false)
-    @NotNull
-    @JoinColumn(unique = true)
-    private Drone drone;
-
     @OneToMany(mappedBy = "droneToMedications")
     private Set<Medication> medications = new HashSet<>();
+
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "drone_to_medications_drone",
+               joinColumns = @JoinColumn(name = "drone_to_medications_id", referencedColumnName = "id"),
+               inverseJoinColumns = @JoinColumn(name = "drone_id", referencedColumnName = "id"))
+    private Set<Drone> drones = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -36,19 +36,6 @@ public class DroneToMedications implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Drone getDrone() {
-        return drone;
-    }
-
-    public DroneToMedications drone(Drone drone) {
-        this.drone = drone;
-        return this;
-    }
-
-    public void setDrone(Drone drone) {
-        this.drone = drone;
     }
 
     public Set<Medication> getMedications() {
@@ -74,6 +61,31 @@ public class DroneToMedications implements Serializable {
 
     public void setMedications(Set<Medication> medications) {
         this.medications = medications;
+    }
+
+    public Set<Drone> getDrones() {
+        return drones;
+    }
+
+    public DroneToMedications drones(Set<Drone> drones) {
+        this.drones = drones;
+        return this;
+    }
+
+    public DroneToMedications addDrone(Drone drone) {
+        this.drones.add(drone);
+        drone.getDroneToMedications().add(this);
+        return this;
+    }
+
+    public DroneToMedications removeDrone(Drone drone) {
+        this.drones.remove(drone);
+        drone.getDroneToMedications().remove(this);
+        return this;
+    }
+
+    public void setDrones(Set<Drone> drones) {
+        this.drones = drones;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
