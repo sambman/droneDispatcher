@@ -30,6 +30,13 @@ public interface DroneToMedicationsService {
      */
     Page<DroneToMedicationsDTO> findAll(Pageable pageable);
 
+    /**
+     * Get all the droneToMedications with eager load of many-to-many relationships.
+     *
+     * @return the list of entities.
+     */
+    Page<DroneToMedicationsDTO> findAllWithEagerRelationships(Pageable pageable);
+
 
     /**
      * Get the "id" droneToMedications.

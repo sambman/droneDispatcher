@@ -13,11 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * Service Implementation for managing {@link Drone}.
@@ -53,21 +50,6 @@ public class DroneServiceImpl implements DroneService {
             .map(droneMapper::toDto);
     }
 
-
-
-    /**
-     *  Get all the drones where DroneToMedications is {@code null}.
-     *  @return the list of entities.
-     */
-    @Transactional(readOnly = true) 
-    public List<DroneDTO> findAllWhereDroneToMedicationsIsNull() {
-        log.debug("Request to get all drones where DroneToMedications is null");
-        return StreamSupport
-            .stream(droneRepository.findAll().spliterator(), false)
-            .filter(drone -> drone.getDroneToMedications() == null)
-            .map(droneMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
-    }
 
     @Override
     @Transactional(readOnly = true)

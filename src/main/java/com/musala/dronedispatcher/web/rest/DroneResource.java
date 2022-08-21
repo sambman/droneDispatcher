@@ -94,16 +94,10 @@ public class DroneResource {
      * {@code GET  /drones} : get all the drones.
      *
      * @param pageable the pagination information.
-     * @param filter the filter of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of drones in body.
      */
     @GetMapping("/drones")
-    public ResponseEntity<List<DroneDTO>> getAllDrones(Pageable pageable, @RequestParam(required = false) String filter) {
-        if ("dronetomedications-is-null".equals(filter)) {
-            log.debug("REST request to get all Drones where droneToMedications is null");
-            return new ResponseEntity<>(droneService.findAllWhereDroneToMedicationsIsNull(),
-                    HttpStatus.OK);
-        }
+    public ResponseEntity<List<DroneDTO>> getAllDrones(Pageable pageable) {
         log.debug("REST request to get a page of Drones");
         Page<DroneDTO> page = droneService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);

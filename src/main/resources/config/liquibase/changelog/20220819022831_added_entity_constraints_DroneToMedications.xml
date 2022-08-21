@@ -8,11 +8,17 @@
     -->
     <changeSet id="20220819022831-2" author="jhipster">
         
+        <addForeignKeyConstraint baseColumnNames="drone_to_medications_id"
+                                 baseTableName="drone_to_medications_drone"
+                                 constraintName="fk_drone_to_medications_drone_drone_to_medications_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="drone_to_medications"/>
+
         <addForeignKeyConstraint baseColumnNames="drone_id"
-                                 baseTableName="drone_to_medications"
-                                 constraintName="fk_drone_to_medications_drone_id"
+                                 baseTableName="drone_to_medications_drone"
+                                 constraintName="fk_drone_to_medications_drone_drone_id"
                                  referencedColumnNames="id"
                                  referencedTableName="drone"/>
-
+        
     </changeSet>
 </databaseChangeLog>

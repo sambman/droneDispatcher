@@ -14,6 +14,7 @@ public interface DroneMapper extends EntityMapper<DroneDTO, Drone> {
 
 
     @Mapping(target = "droneToMedications", ignore = true)
+    @Mapping(target = "removeDroneToMedications", ignore = true)
     Drone toEntity(DroneDTO droneDTO);
 
     default Drone fromId(Long id) {

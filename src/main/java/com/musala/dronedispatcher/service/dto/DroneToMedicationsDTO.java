@@ -1,6 +1,5 @@
 package com.musala.dronedispatcher.service.dto;
 
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,10 +11,9 @@ public class DroneToMedicationsDTO implements Serializable {
     
     private Long id;
 
+    private Set<DroneDTO> drones = new HashSet<>();
 
     private Long droneId;
-
-    private DroneDTO drone;
 
     private Set<MedicationDTO> medications = new HashSet<>();
     
@@ -35,20 +33,20 @@ public class DroneToMedicationsDTO implements Serializable {
         this.droneId = droneId;
     }
 
-    public DroneDTO getDrone() {
-        return drone;
-    }
-
-    public void setDrone(DroneDTO drone) {
-        this.drone = drone;
-    }
-
     public Set<MedicationDTO> getMedications() {
         return medications;
     }
 
     public void setMedications(Set<MedicationDTO> medications) {
         this.medications = medications;
+    }
+
+    public Set<DroneDTO> getDrones() {
+        return drones;
+    }
+
+    public void setDrones(Set<DroneDTO> drones) {
+        this.drones = drones;
     }
 
     @Override
@@ -73,7 +71,7 @@ public class DroneToMedicationsDTO implements Serializable {
     public String toString() {
         return "DroneToMedicationsDTO{" +
             "id=" + getId() +
-            ", droneId=" + getDroneId() +
+            ", drones='" + getDrones() + "'" +
             "}";
     }
 }
