@@ -1,8 +1,13 @@
 package com.musala.dronedispatcher.web.rest;
 
+import com.musala.dronedispatcher.domain.enumeration.StateType;
+import com.musala.dronedispatcher.service.DroneService;
 import com.musala.dronedispatcher.service.DroneToMedicationsService;
+import com.musala.dronedispatcher.service.MedicationService;
 import com.musala.dronedispatcher.web.rest.errors.BadRequestAlertException;
+import com.musala.dronedispatcher.service.dto.DroneDTO;
 import com.musala.dronedispatcher.service.dto.DroneToMedicationsDTO;
+import com.musala.dronedispatcher.service.dto.MedicationDTO;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -39,13 +44,17 @@ public class DroneToMedicationsResource {
     private String applicationName;
 
     private final DroneToMedicationsService droneToMedicationsService;
+    private final DroneService droneService;
+    private final MedicationService medicationService;
 
-    public DroneToMedicationsResource(DroneToMedicationsService droneToMedicationsService) {
+    public DroneToMedicationsResource(DroneToMedicationsService droneToMedicationsService, DroneService droneService, MedicationService medicationService) {
         this.droneToMedicationsService = droneToMedicationsService;
+        this.droneService = droneService;
+        this.medicationService = medicationService;
     }
 
     /**
-     * {@code POST  /drone-to-medications} : Create a new droneToMedications.
+     * {@code POST  /drone-to-medications} : Create a new droneToMedications: loading a drone with medication items.
      *
      * @param droneToMedicationsDTO the droneToMedicationsDTO to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new droneToMedicationsDTO, or with status {@code 400 (Bad Request)} if the droneToMedications has already an ID.
@@ -57,7 +66,42 @@ public class DroneToMedicationsResource {
         if (droneToMedicationsDTO.getId() != null) {
             throw new BadRequestAlertException("A new droneToMedications cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        // Check if drone exists
+        Optional<DroneDTO> optionalDroneDTO = droneService.findOne(droneToMedicationsDTO.getDroneId());
+        if (!optionalDroneDTO.isPresent()) {
+            throw new BadRequestAlertException("Cannot find drone with ID: " + droneToMedicationsDTO.getDroneId(), ENTITY_NAME, "idexists");
+        }
+        DroneDTO droneDTO = optionalDroneDTO.get();
+        // Check if drone is waiting for loads
+        if (!droneDTO.getState().equals(StateType.IDLE)) {
+            throw new BadRequestAlertException("Cannot load drone which is on state: " + droneDTO.getState(), ENTITY_NAME, "notloadableid");
+        }
+        // Check if drone have more than 5% battery
+        if (droneDTO.getBatteryCapacity() < 25) {
+            throw new BadRequestAlertException("Cannot load drone with less battery precentage: " + droneDTO.getBatteryCapacity(), ENTITY_NAME, "lessbatterycapacity");
+        }
+
+        // Check if medications total weight is not greater that drone's max capacity
+        if (droneToMedicationsDTO.getMedications() == null || droneToMedicationsDTO.getMedications().size() == 0) {
+            throw new BadRequestAlertException("Cannot load drone with no medication(s).", ENTITY_NAME, "nomedications");
+        }
+        // Chech if any medication is on system and no already loaded
+        Float totalWeight = droneToMedicationsDTO.getMedications()
+            .stream().map(medication -> medication.getWeight())
+            .reduce(0F, (subTotal, element) -> subTotal + element);
+        if (droneDTO.getWeightLimit() < totalWeight) {
+            throw new BadRequestAlertException("Cannot load drone with more than weigth limit: ["
+                + droneDTO.getWeightLimit() + "], medication(s) total weight: ["
+                + totalWeight + "]" , ENTITY_NAME, "gtweightlimit");
+        }
+            
         DroneToMedicationsDTO result = droneToMedicationsService.save(droneToMedicationsDTO);
+        for (MedicationDTO medication : droneToMedicationsDTO.getMedications()) {
+            medication.setDroneToMedicationsId(result.getId());
+            medicationService.save(medication);
+        }
+        droneDTO.setState(StateType.LOADED);
+        droneService.save(droneDTO);
         return ResponseEntity.created(new URI("/api/drone-to-medications/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
