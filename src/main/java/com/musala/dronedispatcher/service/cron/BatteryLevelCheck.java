@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.musala.dronedispatcher.service.DroneService;
+import com.musala.dronedispatcher.service.dto.DroneDTO;
 
 @Component
 public class BatteryLevelCheck {
@@ -20,6 +21,13 @@ public class BatteryLevelCheck {
     // Log info related to battery level each 30 seconds
     @Scheduled(fixedDelay = 30000)
     public void reportBatteryLevel() {
-        log.info("Test logger: {}", droneService.findAllWithoutPagination());
+        for (DroneDTO droneDTO : droneService.findAllWithoutPagination()) {
+            if (droneDTO.getBatteryCapacity() < 25) {
+                log.error("LowBattery: {}", droneDTO);
+            }
+            else {
+                log.info("ChargedBattery: {}", droneDTO);
+            }
+        }
     }
 }
